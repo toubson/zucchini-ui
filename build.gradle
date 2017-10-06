@@ -20,6 +20,7 @@ plugins {
     id 'org.ajoberstar.grgit' version '1.5.1' apply false
     id 'net.ltgt.apt' version '0.9' apply false
     id 'net.ltgt.errorprone' version '0.0.10' apply false
+    id 'org.jetbrains.kotlin.jvm' version '1.1.51' apply false
 }
 
 /**
@@ -61,8 +62,7 @@ allprojects {
         mockito           : '2.10.0',
         junitQuickcheck   : '0.7',
         capsule           : '1.0.3',
-        groovy            : '2.4.13',
-        cucumberGroovy    : '1.2.5',
+        cucumberJvm       : '2.1.0',
         jetty             : '9.4.7.v20170914',
         guava             : '23.1-jre',
         commonsText       : '1.1',
@@ -330,15 +330,19 @@ project("${rootProject.name}-capsule") {
 
 project("${rootProject.name}-example-features") {
 
-    apply plugin: 'groovy'
+    apply plugin: 'kotlin'
 
     dependencies {
 
-        compile "org.codehaus.groovy:groovy-all:${versions.groovy}"
-        compile "info.cukes:cucumber-groovy:${versions.cucumberGroovy}"
+        compile group: 'io.cucumber', name: 'cucumber-java8', version: versions.cucumberJvm
+
         compile "org.slf4j:slf4j-api:${versions.slf4j}"
         compile "org.assertj:assertj-core:${versions.assertj}"
         compile "com.google.guava:guava:${versions.guava}"
+
+        compile 'org.jetbrains.kotlin:kotlin-stdlib-jre8'
+        compile 'org.jetbrains.kotlin:kotlin-reflect'
+        compile 'io.github.microutils:kotlin-logging:1.4.6'
 
     }
 
