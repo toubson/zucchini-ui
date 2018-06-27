@@ -4,8 +4,6 @@ import com.google.common.collect.Sets;
 import io.zucchiniui.backend.scenario.views.ScenarioListItemView;
 import io.zucchiniui.backend.scenario.views.ScenarioStats;
 import io.zucchiniui.backend.scenario.views.ScenarioViewAccess;
-import io.zucchiniui.backend.support.ddd.morphia.MorphiaUtils;
-import io.zucchiniui.backend.testrun.dao.TestRunDAO;
 import io.zucchiniui.backend.testrun.domain.TestRun;
 import io.zucchiniui.backend.testrun.domain.TestRunQuery;
 import io.zucchiniui.backend.testrun.domain.TestRunRepository;
@@ -21,19 +19,15 @@ public class TestRunViewAccess {
 
     private final TestRunRepository testRunRepository;
 
-    private final TestRunDAO testRunDAO;
-
     private final ScenarioViewAccess scenarioViewAccess;
 
     private final BoundMapperFacade<TestRun, TestRunListItem> testRunToListItemMapper;
 
     public TestRunViewAccess(
         final TestRunRepository testRunRepository,
-        final TestRunDAO testRunDAO,
         final ScenarioViewAccess scenarioViewAccess
     ) {
         this.testRunRepository = testRunRepository;
-        this.testRunDAO = testRunDAO;
         this.scenarioViewAccess = scenarioViewAccess;
 
         final TestRunMapper mapper = new TestRunMapper();
@@ -41,7 +35,7 @@ public class TestRunViewAccess {
     }
 
     public List<TestRunListItem> getTestRunListItems(final Consumer<TestRunQuery> preparator, final boolean withStats) {
-        return MorphiaUtils.streamQuery(testRunDAO.prepareTypedQuery(preparator))
+        return testRunRepository.query(preparator).stream()
             .map(testRun -> {
                 final TestRunListItem item = testRunToListItemMapper.map(testRun);
                 if (withStats) {

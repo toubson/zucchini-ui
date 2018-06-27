@@ -1,24 +1,25 @@
 package io.zucchiniui.backend.testrun.domain;
 
 import com.google.common.base.MoreObjects;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.util.Objects;
 
 public final class Label {
 
-    private String name;
+    private final String name;
 
-    private String value;
+    private final String value;
 
-    private String url;
+    private final String url;
 
-    /**
-     * Private constructor for frameworks.
-     */
-    private Label() {
-    }
-
-    public Label(final String name, final String value, final String url) {
+    @BsonCreator
+    public Label(
+        @BsonProperty("name") final String name,
+        @BsonProperty("value") final String value,
+        @BsonProperty("url") final String url
+    ) {
         this.name = Objects.requireNonNull(name);
         this.value = Objects.requireNonNull(value);
         this.url = url;

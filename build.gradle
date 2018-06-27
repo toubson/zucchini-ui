@@ -158,7 +158,8 @@ allprojects {
 
             // Error prone plugin
 
-            project.apply plugin: 'net.ltgt.errorprone'
+            // Can't use error prone with JDK 10
+            // project.apply plugin: 'net.ltgt.errorprone'
 
         }
 
@@ -206,9 +207,15 @@ project("${rootProject.name}-backend") {
         annotationProcessor group: 'org.hibernate', name: 'hibernate-validator-annotation-processor', version: versions.hibernateValidator
 
         compile "io.dropwizard:dropwizard-core:${versions.dropwizard}"
+
         compile "ma.glasnost.orika:orika-core:${versions.orika}"
+
+        // FIXME Morphia must be killed !
         compile "org.mongodb.morphia:morphia:${versions.morphia}"
         compile "org.mongodb.morphia:morphia-logging-slf4j:${versions.morphia}"
+
+        compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.8.0'
+
         compile "org.slf4j:slf4j-api:${versions.slf4j}"
         compile "org.springframework:spring-context:${versions.spring}"
         compile "org.eclipse.jetty.websocket:javax-websocket-server-impl:${versions.jetty}"

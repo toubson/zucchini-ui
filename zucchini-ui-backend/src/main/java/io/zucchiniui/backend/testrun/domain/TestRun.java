@@ -1,20 +1,16 @@
 package io.zucchiniui.backend.testrun.domain;
 
 import io.zucchiniui.backend.support.ddd.BaseEntity;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
-@Entity("testRuns")
 public class TestRun extends BaseEntity<String> {
 
-    @Id
+    @BsonId
     private String id;
 
     private String type;
@@ -22,6 +18,21 @@ public class TestRun extends BaseEntity<String> {
     private ZonedDateTime date;
 
     private List<Label> labels = new ArrayList<>();
+
+    @BsonCreator
+    public static TestRun fromMongo(
+        @BsonId final String id,
+        @BsonProperty("type") final String type,
+        @BsonProperty("date") final ZonedDateTime date,
+        @BsonProperty("labels") final List<Label> labels
+    ) {
+        final TestRun testRun = new TestRun();
+        testRun.id = id;
+        testRun.type = type;
+        testRun.date = date;
+        testRun.labels = (labels == null ? Collections.emptyList() : labels);
+        return testRun;
+    }
 
     /**
      * Private constructor for Morphia.

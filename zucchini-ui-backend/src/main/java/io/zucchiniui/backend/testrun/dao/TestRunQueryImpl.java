@@ -1,25 +1,21 @@
 package io.zucchiniui.backend.testrun.dao;
 
-import io.zucchiniui.backend.support.ddd.morphia.BaseMorphiaQuery;
-import io.zucchiniui.backend.testrun.domain.TestRun;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
+import io.zucchiniui.backend.support.ddd.mongo.MongoQuerySupport;
 import io.zucchiniui.backend.testrun.domain.TestRunQuery;
-import org.mongodb.morphia.query.Query;
 
-class TestRunQueryImpl extends BaseMorphiaQuery<TestRun> implements TestRunQuery {
-
-    protected TestRunQueryImpl(final Query<TestRun> query) {
-        super(query);
-    }
+public class TestRunQueryImpl extends MongoQuerySupport implements TestRunQuery {
 
     @Override
-    public TestRunQuery withType(final String type) {
-        configureQuery(q -> q.field("type").equal(type));
+    public TestRunQuery orderByLatestFirst() {
+        addSort(Sorts.descending("date"));
         return this;
     }
 
     @Override
-    public TestRunQuery orderByLatestFirst() {
-        configureQuery(q -> q.order("-date"));
+    public TestRunQuery withType(String type) {
+        addFilter(Filters.eq("type", type));
         return this;
     }
 
