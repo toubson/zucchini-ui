@@ -2,17 +2,17 @@ package io.zucchiniui.backend.support.ddd.mongo;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import io.zucchiniui.backend.support.ddd.EntityNotFoundException;
 import io.zucchiniui.backend.support.ddd.PreparedQuery;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class MongoPreparedQuery<T, Q extends MongoQuerySupport> implements PreparedQuery<T> {
 
@@ -43,7 +43,9 @@ public class MongoPreparedQuery<T, Q extends MongoQuerySupport> implements Prepa
 
     @Override
     public Stream<T> stream() {
-        return find().stream();
+        final MongoCursor<T> cursor = query().iterator();
+        final Spliterator<T> spliterator = Spliterators.spliteratorUnknownSize(cursor, Spliterator.NONNULL);
+        return StreamSupport.stream(spliterator, false).onClose(cursor::close);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class MongoPreparedQuery<T, Q extends MongoQuerySupport> implements Prepa
 
     @Override
     public void update(Consumer<T> updater) {
-        stream().forEach(testRun -> {
+        query().forEach((Consumer<T>) testRun -> {
             updater.accept(testRun);
             collection.replaceOne(
                 Filters.eq("_id", idExtractor.apply(testRun)),
