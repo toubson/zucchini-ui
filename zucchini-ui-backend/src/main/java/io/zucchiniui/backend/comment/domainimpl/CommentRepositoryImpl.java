@@ -1,17 +1,28 @@
 package io.zucchiniui.backend.comment.domainimpl;
 
-import io.zucchiniui.backend.comment.dao.CommentDAO;
+import com.mongodb.client.MongoDatabase;
 import io.zucchiniui.backend.comment.domain.Comment;
 import io.zucchiniui.backend.comment.domain.CommentQuery;
 import io.zucchiniui.backend.comment.domain.CommentRepository;
-import io.zucchiniui.backend.support.ddd.morphia.MorphiaQueriableRepository;
+import io.zucchiniui.backend.support.ddd.PreparedQuery;
+import io.zucchiniui.backend.support.ddd.mongo.MongoPreparedQuery;
+import io.zucchiniui.backend.support.ddd.mongo.MongoRepository;
 import org.springframework.stereotype.Component;
 
-@Component
-class CommentRepositoryImpl extends MorphiaQueriableRepository<Comment, String, CommentQuery> implements CommentRepository {
+import java.util.function.Consumer;
 
-    public CommentRepositoryImpl(final CommentDAO dao) {
-        super(dao);
+@Component
+class CommentRepositoryImpl extends MongoRepository<Comment, String> implements CommentRepository {
+
+    public CommentRepositoryImpl(MongoDatabase database) {
+        super(Comment.class, database.getCollection("comments", Comment.class), Comment::getId);
+    }
+
+    @Override
+    public PreparedQuery<Comment> query(Consumer<? super CommentQuery> preparator) {
+        final CommentQueryImpl query = new CommentQueryImpl();
+        preparator.accept(query);
+        return new MongoPreparedQuery<>(entityClass, collection, idExtractor, query);
     }
 
 }

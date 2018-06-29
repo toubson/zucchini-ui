@@ -3,27 +3,22 @@ package io.zucchiniui.backend.comment.domain;
 import com.google.common.collect.Sets;
 import io.zucchiniui.backend.shared.domain.ItemReference;
 import io.zucchiniui.backend.support.ddd.BaseEntity;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Comment entity.
  */
-@Entity("comments")
 public class Comment extends BaseEntity<String> {
 
     /**
      * ID.
      */
-    @Id
+    @BsonId
     private String id;
 
     /**
@@ -39,12 +34,23 @@ public class Comment extends BaseEntity<String> {
     /**
      * Comment references.
      */
-    @Embedded(concreteClass = HashSet.class)
     private Set<ItemReference> references;
 
-    /**
-     * Private constructor for Morphia.
-     */
+    @BsonCreator
+    public static Comment fromMongo(
+        @BsonId String id,
+        @BsonProperty("date") ZonedDateTime date,
+        @BsonProperty("content") String content,
+        @BsonProperty("references") Set<ItemReference> references
+    ) {
+        final Comment comment = new Comment();
+        comment.id = id;
+        comment.date = date;
+        comment.content = content;
+        comment.references = new HashSet<>(references);
+        return comment;
+    }
+
     private Comment() {
     }
 

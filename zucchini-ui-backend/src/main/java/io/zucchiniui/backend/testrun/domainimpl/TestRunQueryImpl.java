@@ -1,4 +1,4 @@
-package io.zucchiniui.backend.testrun.dao;
+package io.zucchiniui.backend.testrun.domainimpl;
 
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;

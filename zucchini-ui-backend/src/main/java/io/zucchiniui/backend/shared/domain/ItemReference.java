@@ -2,6 +2,8 @@ package io.zucchiniui.backend.shared.domain;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.util.Objects;
 
@@ -21,19 +23,16 @@ public final class ItemReference {
     private String reference;
 
     /**
-     * Private constructor for Morphia.
-     */
-    private ItemReference() {
-
-    }
-
-    /**
      * Create a new reference.
      *
      * @param type      Type
      * @param reference Reference value
      */
-    public ItemReference(final ItemReferenceType type, final String reference) {
+    @BsonCreator
+    public ItemReference(
+        @BsonProperty("type") final ItemReferenceType type,
+        @BsonProperty("reference") final String reference
+    ) {
         this.type = Objects.requireNonNull(type);
 
         if (Strings.isNullOrEmpty(reference)) {

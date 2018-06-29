@@ -4,7 +4,6 @@ import com.mongodb.client.MongoDatabase;
 import io.zucchiniui.backend.support.ddd.PreparedQuery;
 import io.zucchiniui.backend.support.ddd.mongo.MongoPreparedQuery;
 import io.zucchiniui.backend.support.ddd.mongo.MongoRepository;
-import io.zucchiniui.backend.testrun.dao.TestRunQueryImpl;
 import io.zucchiniui.backend.testrun.domain.TestRun;
 import io.zucchiniui.backend.testrun.domain.TestRunQuery;
 import io.zucchiniui.backend.testrun.domain.TestRunRepository;

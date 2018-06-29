@@ -34,9 +34,6 @@ public class TestRun extends BaseEntity<String> {
         return testRun;
     }
 
-    /**
-     * Private constructor for Morphia.
-     */
     private TestRun() {
     }
 
