@@ -1,3 +1,5 @@
+import "./styles/main.less";
+
 import "@babel/polyfill";
 
 import ReactDOM from "react-dom";
